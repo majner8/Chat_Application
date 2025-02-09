@@ -1,7 +1,7 @@
 package chat.app.security.auth.dto;
 
-import javax.validation.constraints.Email;
 
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 
 @Getter
