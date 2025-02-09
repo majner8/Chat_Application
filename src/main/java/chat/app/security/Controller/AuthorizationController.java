@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +19,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import app.common.RestRequestSession;
-import chat.app.security.TokenGenerator;
 import chat.app.security.auth.JwtTokenGenerator;
 import chat.app.security.auth.dto.EmailUserAuthorizationDTO;
 import chat.app.security.auth.dto.PhoneUserAuthorizationDTO;
@@ -29,6 +28,7 @@ import chat.app.security.auth.dto.UserFinishRegistrationDTO;
 import chat.app.security.database.UserEntity;
 import chat.app.security.database.UserRepository;
 import chat.app.security.database.UserRepository.AuthProjection;
+import jakarta.persistence.EntityNotFoundException;
 @Controller
 public class AuthorizationController {
 	
@@ -43,7 +43,7 @@ public class AuthorizationController {
 	@Autowired
 	private RestRequestSession session;
 
-	@PostMapping("/register")
+	@PostMapping("/public/register")
 	public ResponseEntity<TokenDTO> register(UserAuthorizationDTO dto){
 		UserEntity ent=new UserEntity();
 		switch(dto.getType()) {
@@ -72,7 +72,7 @@ public class AuthorizationController {
 		TokenDTO token=this.tokenGenerator.generateToken(this.createUser(false, String.valueOf(persistEntity.getId())));
 		return ResponseEntity.status(HttpStatus.OK).body(token);
 	}
-	@PostMapping("/login")
+	@PostMapping("/public/login")
 	public ResponseEntity<TokenDTO> login(UserAuthorizationDTO dto){
 		Optional<AuthProjection> entPr=Optional.empty();
 		switch(dto.getType()) {
@@ -92,11 +92,14 @@ public class AuthorizationController {
 
 		return ResponseEntity.status(HttpStatus.OK).body(token);
 	}
-
+	
+	@PostMapping("/authenticated/finishRegistration")
 	public ResponseEntity<TokenDTO> finishRegistration(UserFinishRegistrationDTO dto){
 		long id=this.session.getUserID();
 		UserEntity entity=this.transaction.execute((status)->{
-			UserEntity entPr=this.repo.findById(id).orElseThrow(()->new EntityNotFoundException ());
+			
+			UserEntity entPr=this.repo.findById(id)		
+					.orElseThrow(()->new EntityNotFoundException ());
 			
 			entPr.setLastName(dto.getLastName())
 			.setName(dto.getName())
@@ -109,13 +112,16 @@ public class AuthorizationController {
 
 		return ResponseEntity.status(HttpStatus.OK).body(token);
 	}
-	private UserDetails createUser(boolean finishRegistration,String userName) {
-		List<? extends GrantedAuthority> x=new ArrayList<>();
+	
 
+	private UserDetails createUser(boolean finishRegistration,String userName) {
+		ArrayList<GrantedAuthority> list=new ArrayList<>();
+		if(finishRegistration) {list.add(new SimpleGrantedAuthority("AUTHORIZED"));}
+		
 		return User.builder()
 				.disabled(!finishRegistration)
 				.username(userName)
-				.authorities(x)
+				.authorities(list)
 				.build()
 				;
 	}
