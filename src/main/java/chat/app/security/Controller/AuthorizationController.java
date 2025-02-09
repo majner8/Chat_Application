@@ -1,5 +1,7 @@
-package chat.app.security.auth;
+package chat.app.security.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -8,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import app.common.RestRequestSession;
 import chat.app.security.TokenGenerator;
+import chat.app.security.auth.JwtTokenGenerator;
 import chat.app.security.auth.dto.EmailUserAuthorizationDTO;
 import chat.app.security.auth.dto.PhoneUserAuthorizationDTO;
 import chat.app.security.auth.dto.TokenDTO;
@@ -33,9 +39,10 @@ public class AuthorizationController {
 	@Autowired
 	private PasswordEncoder hashService;
 	@Autowired
-	private TokenGenerator tokenGenerator;
+	private JwtTokenGenerator tokenGenerator;
 	@Autowired
 	private RestRequestSession session;
+
 	@PostMapping("/register")
 	public ResponseEntity<TokenDTO> register(UserAuthorizationDTO dto){
 		UserEntity ent=new UserEntity();
@@ -62,7 +69,7 @@ public class AuthorizationController {
 		} catch (DataIntegrityViolationException e) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-		TokenDTO token=this.tokenGenerator.generateToken(persistEntity.getId(), this.session.getDeviceID(),false);
+		TokenDTO token=this.tokenGenerator.generateToken(this.createUser(false, String.valueOf(persistEntity.getId())));
 		return ResponseEntity.status(HttpStatus.OK).body(token);
 	}
 	@PostMapping("/login")
@@ -80,7 +87,9 @@ public class AuthorizationController {
 		}
 		if(entPr.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		if(!this.hashService.matches(dto.getPassword(),entPr.get().getPassword())) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-		TokenDTO token=this.tokenGenerator.generateToken(entPr.get().getId(), this.session.getDeviceID(),entPr.get().getFinishRegistration());
+		AuthProjection pr=entPr.get();
+		TokenDTO token=this.tokenGenerator.generateToken(this.createUser(pr.getFinishRegistration(), String.valueOf(pr.getId())));
+
 		return ResponseEntity.status(HttpStatus.OK).body(token);
 	}
 
@@ -96,8 +105,18 @@ public class AuthorizationController {
 		
 			return entPr;
 		});
-		TokenDTO token=this.tokenGenerator.generateToken(id, this.session.getDeviceID(),true);
+		TokenDTO token=this.tokenGenerator.generateToken(this.createUser(true, String.valueOf(id)));
+
 		return ResponseEntity.status(HttpStatus.OK).body(token);
 	}
-	
+	private UserDetails createUser(boolean finishRegistration,String userName) {
+		List<? extends GrantedAuthority> x=new ArrayList<>();
+
+		return User.builder()
+				.disabled(!finishRegistration)
+				.username(userName)
+				.authorities(x)
+				.build()
+				;
+	}
 }

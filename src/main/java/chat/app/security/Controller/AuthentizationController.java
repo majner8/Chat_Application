@@ -1,4 +1,4 @@
-package chat.app.security.auth;
+package chat.app.security.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

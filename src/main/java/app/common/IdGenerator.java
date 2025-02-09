@@ -6,15 +6,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-@Component
 public class IdGenerator {
-	public static String generateUniqueUserDeviceId(long deviceID,long userID) {
-		return null;
-	}
-	
-	public long generateDeviceID() {
-		return -1;
-	}
+
 	
 	public static String generateChatID(List<Integer>memberID,boolean groupChat) {
 		if(!groupChat&&memberID.size()!=2) {
