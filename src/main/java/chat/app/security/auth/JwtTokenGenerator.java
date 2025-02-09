@@ -6,7 +6,6 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +20,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import app.common.IdGenerator;
 import chat.app.security.auth.dto.TokenDTO;
+import jakarta.annotation.PostConstruct;
 @Service
 public class JwtTokenGenerator {
 
@@ -30,8 +30,7 @@ public class JwtTokenGenerator {
 	private Duration deviceExpiration;
 	@Value("${security.token.key}")
     private String tokenKey;
-	@Autowired
-	private IdGenerator idGenerator;
+
 	private Algorithm tokenAlg;
 
 	private final String finishRegistrationHeader="finishRegistration";
