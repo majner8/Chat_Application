@@ -1,5 +1,6 @@
 package chat.app.security;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ public class SecurityConfig {
 
 	@Autowired
 	private AuthSecurityFilter authFilter;
+	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 	    http
@@ -36,9 +38,8 @@ public class SecurityConfig {
 	    return http.build();
 	}
 
+  
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
+  
 }

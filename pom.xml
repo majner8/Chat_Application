@@ -87,6 +87,11 @@
 
 
 
+  	<dependency>
+  		<groupId>antonin.bicak</groupId>
+  		<artifactId>ChatAPP</artifactId>
+  		<version>1</version>
+  	</dependency>
   </dependencies>
   <build>
     <plugins>

@@ -1,14 +1,16 @@
-package chat.app.security.auth;
+package chat.app.security.auth.token;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +21,11 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import app.common.IdGenerator;
+import chat.app.security.auth.authentication.CustomUserDetail;
+import chat.app.security.auth.authentication.JwtAuthentication;
+import chat.app.security.auth.authentication.UserNamePasswordAuthentication;
 import chat.app.security.auth.dto.TokenDTO;
+import chat.app.user.UserServiceAuthDTO;
 import jakarta.annotation.PostConstruct;
 @Service
 public class JwtTokenGenerator {
@@ -41,15 +47,28 @@ public class JwtTokenGenerator {
 	public void postConstruct() {
 		this.tokenAlg=Algorithm.HMAC512(tokenKey);
 	}
-	public TokenDTO generateToken(UserDetails userDetails) {
+	public TokenDTO generateToken(Authentication auth) {
+		if(!auth.isAuthenticated()) {
+			throw new IllegalArgumentException("Cannot create token for unauthenticated user");
+		}
+		CustomUserDetail user=((CustomUserDetail)auth.getPrincipal());
+		return this.generateToken(user.isCompleteRegistration(), user.getUsername(), 
+				user.getAuthorities().stream().map((v)->{
+					return v;
+				}).toList()
+				);
+	}
+	
+	public TokenDTO generateToken(UserServiceAuthDTO dto) {
+		return this.generateToken(false, dto.getId(),dto.getRole());
+	}
+	
+	
+	private TokenDTO generateToken(boolean completeRegistration,String userName,List<? extends GrantedAuthority> role) {
 		LocalDateTime createdAt=LocalDateTime.now();
 		LocalDateTime expiration=createdAt.plus(userExpiration);
-		boolean finishRegistration=userDetails.isEnabled();
-		String userName=userDetails.getUsername();
-		List<? extends GrantedAuthority> role=userDetails.getAuthorities().stream().
-				map(v->{
-					return v;
-				}).toList();
+		boolean finishRegistration=completeRegistration;
+	
 		String token=JWT.create()
 		.withClaim(this.finishRegistrationHeader, finishRegistration)
 		.withClaim(this.userNameHeader, userName)
@@ -65,8 +84,7 @@ public class JwtTokenGenerator {
 				;
 		return tokenDTO;
 	}
-	
-	public UserDetails verifyToken(String token) {
+	public JwtAuthentication verifyToken(String token) {
 
 		
 		DecodedJWT jwt=JWT.require(tokenAlg)
@@ -75,10 +93,14 @@ public class JwtTokenGenerator {
 		String userName=jwt.getClaim(this.userNameHeader).asString();
 		Collection<? extends GrantedAuthority> role=jwt.getClaim(this.authRoleHeader).asList(GrantedAuthority.class);
 		
-				UserDetails user=User.builder()
-						.username(userName)
-						.disabled(!finishRegistration)
-						.authorities(role)
-						.build();
-				return user;	}
+		CustomUserDetail user=CustomUserDetail.builder()
+				.setUserName(userName)
+				.setPermission(role)
+				.setCompleteRegistration(finishRegistration)
+				.build();
+			return JwtAuthentication.builder()
+					.setFinishRegistration(finishRegistration)
+					.setJwtToken(token)
+					.setUser(user).build();
+				}
 }

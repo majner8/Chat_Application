@@ -2,6 +2,7 @@ package app.chat.database;
 
 import java.util.List;
 
+import chat.app.security.database.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -25,6 +26,10 @@ public class ChatMemberEntity {
     @MapsId("chatID")  
     @JoinColumn(name = "chat_id", referencedColumnName = "chat_id")
 	private ChatInformationEntity information;
+    @ManyToOne
+    @MapsId("userID")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")  
+    private UserEntity user;
     @Column
 	private String chatNickName;
     @Column

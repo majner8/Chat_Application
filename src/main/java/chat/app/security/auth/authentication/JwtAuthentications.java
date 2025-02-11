@@ -1,4 +1,4 @@
-package chat.app.security.auth;
+package chat.app.security.auth.authentication;
 
 
 import org.springframework.security.core.Authentication;
@@ -12,7 +12,7 @@ import lombok.Setter;
 import java.util.Collection;
 @AllArgsConstructor
 @Builder(setterPrefix="set")
-public class JwtAuthentication implements Authentication {
+public class JwtAuthentications implements Authentication {
 	private final UserDetails user;
     private final String username;
     private boolean finishRegistration;
