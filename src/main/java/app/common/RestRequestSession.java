@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
 import chat.app.security.auth.dto.DeviceTokenDTO;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +16,10 @@ import lombok.Setter;
 @Setter
 public class RestRequestSession {
 
-	private long deviceID;
 	private long userID;
-	private String uniqueID;
-
+	@Getter(value=AccessLevel.NONE)	
+	private String userIDStr;
+	public String getUserIdAsString() {
+		return this.userIDStr;
+	}
 }

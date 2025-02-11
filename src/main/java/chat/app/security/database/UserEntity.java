@@ -16,8 +16,6 @@ public class UserEntity {
 	@Column
 	private String email;
 	@Column
-	private String countryCode;
-	@Column
 	private String phoneNumber;
 	@Column
 	private String password;

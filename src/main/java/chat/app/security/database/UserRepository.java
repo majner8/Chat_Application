@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<UserEntity,Long> {
 
 	public boolean existsByEmail(String email);
-	public boolean existsByPhoneNumberAndCountryCode(String phoneNumber,String countryCode);
+	public boolean existsByPhoneNumber(String phoneNumber);
 	public Optional<AuthProjection> findByEmail(String email);
-	public Optional<AuthProjection> findByPhoneNumberAndCountryCode(String phoneNumber,String countryCode);
+	public Optional<AuthProjection> findByPhoneNumber(String phoneNumber);
 	
 	public static interface AuthProjection{
 		public boolean getFinishRegistration();
