@@ -15,8 +15,8 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
 	public Optional<AuthProjection> findByPhoneNumber(String phoneNumber);
 	
 	public static interface AuthProjection{
-		public boolean getFinishRegistration();
+		public Boolean getFinishRegistration();
 		public String getPassword();
-		public long getId();
+		public Long getId();
 	}
 }

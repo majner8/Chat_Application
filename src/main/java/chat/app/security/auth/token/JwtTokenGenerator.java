@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,8 @@ public class JwtTokenGenerator {
 	private Duration deviceExpiration;
 	@Value("${security.token.key}")
     private String tokenKey;
+	@Value("${security.token.preflix}")
+	private String tokenPreflix;
 
 	private Algorithm tokenAlg;
 
@@ -68,11 +71,15 @@ public class JwtTokenGenerator {
 		LocalDateTime createdAt=LocalDateTime.now();
 		LocalDateTime expiration=createdAt.plus(userExpiration);
 		boolean finishRegistration=completeRegistration;
-	
+		
 		String token=JWT.create()
 		.withClaim(this.finishRegistrationHeader, finishRegistration)
 		.withClaim(this.userNameHeader, userName)
-		.withClaim(this.authRoleHeader, role)
+		.withClaim(this.authRoleHeader, role
+				.stream().map((r)->{
+					return r.getAuthority();
+				}).toList()
+				)
 		.sign(this.tokenAlg);
 		
 		TokenDTO tokenDTO=		new TokenDTO()
@@ -86,12 +93,16 @@ public class JwtTokenGenerator {
 	}
 	public JwtAuthentication verifyToken(String token) {
 
-		
+		token=token.replaceFirst(this.tokenPreflix, "").trim();
 		DecodedJWT jwt=JWT.require(tokenAlg)
 				.build().verify(token);
 		boolean finishRegistration=jwt.getClaim(this.finishRegistrationHeader).asBoolean();
 		String userName=jwt.getClaim(this.userNameHeader).asString();
-		Collection<? extends GrantedAuthority> role=jwt.getClaim(this.authRoleHeader).asList(GrantedAuthority.class);
+		Collection<? extends GrantedAuthority> role=jwt.getClaim(this.authRoleHeader).asList(String.class).stream().map((v)->{
+			
+			return new SimpleGrantedAuthority(v);
+			
+		}).toList();
 		
 		CustomUserDetail user=CustomUserDetail.builder()
 				.setUserName(userName)
@@ -101,6 +112,7 @@ public class JwtTokenGenerator {
 			return JwtAuthentication.builder()
 					.setFinishRegistration(finishRegistration)
 					.setJwtToken(token)
+					.setIsAuthentication(false)
 					.setUser(user).build();
 				}
 }

@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import app.start.Start;
 import chat.app.security.auth.authentication.CustomUserDetail;
 import chat.app.security.auth.authentication.UserNamePasswordAuthentication;
 import chat.app.security.database.UserRepository;
@@ -30,6 +31,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {   
 		UserNamePasswordAuthentication aut=(UserNamePasswordAuthentication)authentication;
 		Optional<AuthProjection> entPr=Optional.empty();
+		Start.logger.debug("get name value:" +aut.getName());
 		switch(aut.getAuthorizationType()) {
 			case EMAIL: 
 				entPr=this.repo.findByEmail(aut.getName());
@@ -46,8 +48,8 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 	        throw new BadCredentialsException("Invalid username or password");
 		}
 		List<GrantedAuthority> permision=new ArrayList<>();
-		if(pr.getFinishRegistration()) {
-			permision.add(new SimpleGrantedAuthority("AUTHORIZED"));
+		if(!pr.getFinishRegistration()) {
+			permision.add(new SimpleGrantedAuthority("ROLE_UNAUTHORIZED"));
 		}
 		CustomUserDetail user=CustomUserDetail.builder()
 				.setUserName(String.valueOf(pr.getId()))

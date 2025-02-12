@@ -61,8 +61,11 @@ public class UserService {
 		} catch (DataIntegrityViolationException e) {
 			//log warn
 			throw this.generateUserExistException(dto.getType());
-		}
-		return new UserServiceAuthDTO(String.valueOf(persistEntity.getId()),new ArrayList<>());
+		}		
+		List<GrantedAuthority> autority=new ArrayList<>();
+		autority.add(new SimpleGrantedAuthority("ROLE_UNAUTHORIZED"));
+
+		return new UserServiceAuthDTO(String.valueOf(persistEntity.getId()),autority);
 
 	}
 	
@@ -81,7 +84,7 @@ public class UserService {
 			return entPr;
 		});
 		List<GrantedAuthority> autority=new ArrayList<>();
-		autority.add(new SimpleGrantedAuthority("AUTHORIZED"));
+
 		return new UserServiceAuthDTO(this.session.getUserIdAsString(),autority);
 	}
 	private UserExistException generateUserExistException(AuthorizationType autType) {

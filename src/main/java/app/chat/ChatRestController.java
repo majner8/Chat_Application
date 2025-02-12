@@ -49,5 +49,6 @@ public class ChatRestController {
 		this.memberRepo.saveAll(member);
 		dto.setChatID(chatID);
 		return ResponseEntity.ok(dto);
+		
 	}
 }

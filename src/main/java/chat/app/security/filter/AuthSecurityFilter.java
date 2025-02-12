@@ -11,15 +11,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import app.start.Start;
 import chat.app.security.auth.token.JwtTokenGenerator;
 
 @Component
 public class AuthSecurityFilter extends OncePerRequestFilter {
 
-	@Value("${security.token.userheaderpreflix}")
-	private String tokenPreflix;
-	@Autowired
-	private  AuthenticationManager authenticationManager;
+	@Value("${security.token.headername}")
+	private String tokenHeaderName;
+
 	@Autowired
 	private JwtTokenGenerator tokenGenerator;
 	
@@ -28,10 +28,9 @@ public class AuthSecurityFilter extends OncePerRequestFilter {
 			jakarta.servlet.http.HttpServletResponse response, jakarta.servlet.FilterChain filterChain)
 			throws jakarta.servlet.ServletException, IOException {
 
-		String rawToken=request.getHeader(tokenPreflix);
+		String rawToken=request.getHeader(this.tokenHeaderName);
 		if(rawToken!=null) {
-			Authentication authRequest=this.tokenGenerator.verifyToken(rawToken);
-			Authentication auth=authenticationManager.authenticate(authRequest);
+			Authentication auth=this.tokenGenerator.verifyToken(rawToken);
 			SecurityContextHolder.getContext().setAuthentication(auth);
 		}
 		

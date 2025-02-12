@@ -60,7 +60,7 @@ public class UserNamePasswordAuthentication implements Authentication {
 	@Override
 	public Object getCredentials() {
 
-		if(!this.isAuthenticated) {
+		if(this.isAuthenticated) {
 			return null;
 		}
 		return this.authenticationDTO.getPassword();
@@ -74,7 +74,7 @@ public class UserNamePasswordAuthentication implements Authentication {
 
 	@Override
 	public Object getPrincipal() {
-		return this.getDetails();
+		return this.userDetail;
 	}
 
 	@Override

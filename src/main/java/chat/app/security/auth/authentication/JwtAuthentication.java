@@ -22,7 +22,7 @@ public class JwtAuthentication implements Authentication {
 	public JwtAuthentication(JwtAuthentication jwtAuthentication ,boolean isAuthentication) {
 		this.user = jwtAuthentication.getUser();
 		this.jwtToken =jwtAuthentication.getJwtToken();
-		this.isAuthentication = jwtAuthentication.isAuthentication();
+		this.isAuthentication = isAuthentication;
 		this.finishRegistration=jwtAuthentication.isFinishRegistration();
 	}
 	
