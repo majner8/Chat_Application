@@ -63,7 +63,8 @@ public class JwtTokenGenerator {
 	}
 	
 	public TokenDTO generateToken(UserServiceAuthDTO dto) {
-		return this.generateToken(false, dto.getId(),dto.getRole());
+		
+		return this.generateToken(dto.isFinishRegistration(), dto.getId(),dto.getRole());
 	}
 	
 	

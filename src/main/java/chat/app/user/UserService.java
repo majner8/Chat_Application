@@ -65,7 +65,7 @@ public class UserService {
 		List<GrantedAuthority> autority=new ArrayList<>();
 		autority.add(new SimpleGrantedAuthority("ROLE_UNAUTHORIZED"));
 
-		return new UserServiceAuthDTO(String.valueOf(persistEntity.getId()),autority);
+		return new UserServiceAuthDTO(String.valueOf(persistEntity.getId()),autority,false);
 
 	}
 	
@@ -85,7 +85,7 @@ public class UserService {
 		});
 		List<GrantedAuthority> autority=new ArrayList<>();
 
-		return new UserServiceAuthDTO(this.session.getUserIdAsString(),autority);
+		return new UserServiceAuthDTO(this.session.getUserIdAsString(),autority,true);
 	}
 	private UserExistException generateUserExistException(AuthorizationType autType) {
 		return switch(autType) {

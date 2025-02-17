@@ -57,8 +57,10 @@ public class AuthorizationControllerTest {
 					x
 					
 					, TokenDTO.class);
+		    
 			    assertEquals(HttpStatus.OK, response1.getStatusCode());
 			    assertNotNull(response1.getBody());
+			    
 			    UserFinishRegistrationDTO dto=new UserFinishRegistrationDTO();
 			    dto.setLastName("ahoj");
 			    dto.setName("ahoj");

@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Entity
 public class ChatInformationEntity {
-	@Column(name="chat_id")
+	@Column()
 	@Id
 	private String chatID;
 	@Column

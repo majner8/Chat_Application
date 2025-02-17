@@ -13,13 +13,9 @@ public  class PersistRepositoryImpl<ENT,K> implements PersistRepository<ENT, K> 
 	@PersistenceContext
 	private EntityManager manager;
 	@Override
-	public void persist(ENT entity) throws EntityExistException {
-		try {
+	public void persist(ENT entity) {
 		this.manager.persist(entity);
-		}
-		catch(PersistenceException  e) {
-			throw  new EntityExistException();
-		}
+		
 	}
 
 }

@@ -5,13 +5,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
+import app.start.Start;
 import chat.app.security.auth.authentication.JwtAuthentication;
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		
+		Start.logger.debug("jwtAuthenticationProvider active");
 		return new JwtAuthentication((JwtAuthentication)authentication,true);
 	}
 

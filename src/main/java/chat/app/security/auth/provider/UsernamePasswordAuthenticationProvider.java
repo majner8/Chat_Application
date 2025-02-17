@@ -31,7 +31,6 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {   
 		UserNamePasswordAuthentication aut=(UserNamePasswordAuthentication)authentication;
 		Optional<AuthProjection> entPr=Optional.empty();
-		Start.logger.debug("get name value:" +aut.getName());
 		switch(aut.getAuthorizationType()) {
 			case EMAIL: 
 				entPr=this.repo.findByEmail(aut.getName());

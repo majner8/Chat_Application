@@ -10,6 +10,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
+import org.springframework.security.authorization.AuthorityAuthorizationManager;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationManagers;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,39 +35,39 @@ import jakarta.servlet.http.HttpServletResponse;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	private AuthSecurityFilter authFilter;
-	private AuthenticationManager manager;
 	@Autowired
-	public SecurityConfig(AuthSecurityFilter authFilter,
-			List<AuthenticationProvider> authenticationProviders) {
-		this.authFilter = authFilter;
-		this.manager=new ProviderManager(authenticationProviders);
-	}
+
+	private AuthSecurityFilter authFilter;
+
+	
 
 
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-	    http
+		http
 	        .csrf(csrf -> csrf.disable())
 	        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 	        .authorizeHttpRequests(auth -> auth
-	            .requestMatchers("/public/**").permitAll() 
-	            .requestMatchers("/authenticated/**").hasRole("UNAUTHORIZED")
+	        		
+	            .requestMatchers("/public/**").permitAll()
+	            .requestMatchers("/error").access(
+	            		(authentication, context)->{
+	            			String ip=context.getRequest().getRemoteAddr();
+	            			return new AuthorizationDecision("127.0.0.1".equals(ip));
+	            		})
+
+	            .requestMatchers("/authenticated/**")
+	                .access(AuthorizationManagers.allOf(
+	                    AuthenticatedAuthorizationManager.authenticated(),
+	                    AuthorityAuthorizationManager.hasRole("UNAUTHORIZED")
+	                ))
 	            .anyRequest().authenticated()
-	          
-	        		)
-	        .authenticationManager(manager)
-	        .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+	        )
+	        .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class); // ✅ Correct placement
 
 	    return http.build();
 	}
-	@Bean
-	public AuthenticationManager createManager() {
-		return this.manager;
-	}
-	
-	 
-	  
+
   
 }

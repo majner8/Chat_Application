@@ -3,6 +3,8 @@ package chat.app.security.database;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +25,7 @@ public class UserEntity {
 	private boolean finishRegistration;
 	@Column
 	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private long id;
 	@Column
 	private String name;

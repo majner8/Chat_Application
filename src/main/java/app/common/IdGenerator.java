@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class IdGenerator {
 
 	
-	public static String generateChatID(List<Integer>memberID,boolean groupChat) {
+	public static String generateChatID(List<Long>memberID,boolean groupChat) {
 		if(!groupChat&&memberID.size()!=2) {
 			throw new IllegalArgumentException();
 		}
@@ -18,8 +18,8 @@ public class IdGenerator {
 			memberID.get(0);
 			memberID.get(1);
 			String chatID=String.join("-", 
-					Integer.toString(memberID.get(0), 32),
-					Integer.toString(memberID.get(1), 32)
+					Long.toString(memberID.get(0), 32),
+					Long.toString(memberID.get(1), 32)
 					);
 			return chatID;
 		}

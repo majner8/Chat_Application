@@ -14,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
+@Setter
 public class UserIDChatIDCompositeKey implements Serializable  {
 
 	@Column

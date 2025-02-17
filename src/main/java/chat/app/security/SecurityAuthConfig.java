@@ -8,18 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import chat.app.security.filter.AuthSecurityFilter;
 @Configuration
-public class SecurityBeanConfig {
-
-	 @Bean
-	    public PasswordEncoder passwordEncoder() {
-	        return new BCryptPasswordEncoder();
-	    }
+public class SecurityAuthConfig {
+	@Autowired
+	private List<AuthenticationProvider> authenticationProviders;
 	
-		
-  
+	 @Bean
+		public AuthenticationManager createManager() {
+			return new ProviderManager(this.authenticationProviders);
+		}
 }

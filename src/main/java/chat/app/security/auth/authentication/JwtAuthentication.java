@@ -59,7 +59,6 @@ public class JwtAuthentication implements Authentication {
 	
 	@Override
 	public boolean isAuthenticated() {
-		// TODO Auto-generated method stub
 		return this.isAuthentication;
 	}
 

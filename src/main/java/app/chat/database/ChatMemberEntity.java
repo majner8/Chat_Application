@@ -21,14 +21,14 @@ import lombok.experimental.Accessors;
 public class ChatMemberEntity {
 
     @EmbeddedId
-	private UserIDChatIDCompositeKey primaryKey;
+	private UserIDChatIDCompositeKey primaryKey=new UserIDChatIDCompositeKey();
     @ManyToOne
     @MapsId("chatID")  
-    @JoinColumn(name = "chat_id", referencedColumnName = "chat_id")
+    @JoinColumn(name = "chatid", referencedColumnName = "chatid")
 	private ChatInformationEntity information;
     @ManyToOne
     @MapsId("userID")
-    @JoinColumn(name = "user_id", referencedColumnName = "id")  
+    @JoinColumn(name = "userid", referencedColumnName = "id")  
     private UserEntity user;
     @Column
 	private String chatNickName;

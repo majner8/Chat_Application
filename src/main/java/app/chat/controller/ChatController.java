@@ -1,4 +1,4 @@
-package app.chat;
+package app.chat.controller;
 
 import java.util.List;
 
