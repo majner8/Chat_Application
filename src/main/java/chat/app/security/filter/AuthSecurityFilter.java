@@ -37,17 +37,8 @@ public class AuthSecurityFilter extends OncePerRequestFilter {
 			Authentication auth=this.tokenGenerator.verifyToken(rawToken);
 			auth=this.manager.authenticate(auth);
 			SecurityContextHolder.getContext().setAuthentication(auth);
-			if(auth.isAuthenticated()) {
-				Start.logger.debug("Request Authenticated, set security context");
-
-			}
-			else {
-				Start.logger.debug("Request is not Authenticated, set security context");
-
-			}
-			Start.logger.trace("Authentication type "+auth.getClass().getName());
-
-			this.session.setAuthData(auth);
+			
+			this.session.setAuthData(auth,request.getRemoteAddr());
 		}
 		
 		filterChain.doFilter(request, response);

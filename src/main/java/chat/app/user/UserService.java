@@ -3,6 +3,8 @@ package chat.app.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import app.common.RestRequestSession;
+import chat.app.security.Controller.AuthorizationController;
 import chat.app.security.auth.dto.AuthorizationType;
 import chat.app.security.auth.dto.EmailUserAuthorizationDTO;
 import chat.app.security.auth.dto.PhoneUserAuthorizationDTO;
@@ -37,18 +40,19 @@ public class UserService {
 	private JwtTokenGenerator tokenGenerator;
 	@Autowired
 	private RestRequestSession session;
+    static final Logger logger = LogManager.getLogger(UserService.class);
 
 	public UserServiceAuthDTO register(UserAuthorizationDTO dto)  {
 		UserEntity ent=new UserEntity();
 		UserExistException ex;
 		switch(dto.getType()) {
 			case EMAIL: 
-				if(this.repo.existsByEmail(dto.getUserName())) throw this.generateUserExistException(dto.getType());
+				if(this.repo.existsByEmail(dto.getUserName())) throw this.generateUserExistException(dto.getType(),dto.getUserName());
 				ent.
 				setEmail(dto.getUserName());
 				break;
 			case PHONE:
-				if(this.repo.existsByPhoneNumber(dto.getUserName()))throw this.generateUserExistException(dto.getType());
+				if(this.repo.existsByPhoneNumber(dto.getUserName()))throw this.generateUserExistException(dto.getType(),dto.getUserName());
 				ent
 				.setPhoneNumber(dto.getUserName());
 				break;
@@ -59,8 +63,7 @@ public class UserService {
 		try {
 			persistEntity = this.repo.save(ent);
 		} catch (DataIntegrityViolationException e) {
-			//log warn
-			throw this.generateUserExistException(dto.getType());
+			throw this.generateUserExistException(dto.getType(),dto.getUserName());
 		}		
 		List<GrantedAuthority> autority=new ArrayList<>();
 		autority.add(new SimpleGrantedAuthority("ROLE_UNAUTHORIZED"));
@@ -87,10 +90,10 @@ public class UserService {
 
 		return new UserServiceAuthDTO(this.session.getUserIdAsString(),autority,true);
 	}
-	private UserExistException generateUserExistException(AuthorizationType autType) {
+	private UserExistException generateUserExistException(AuthorizationType autType,String userName) {
 		return switch(autType) {
-		case EMAIL ->new UserExistException("Email is already registered");
-		case PHONE->  new UserExistException("Phone is already registered");		
+		case EMAIL ->new UserExistException("Email is already registered",userName,autType);
+		case PHONE->  new UserExistException("Phone is already registered",userName,autType);		
 		};	
 		
 	}	

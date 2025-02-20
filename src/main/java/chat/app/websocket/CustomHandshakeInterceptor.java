@@ -2,6 +2,8 @@ package chat.app.websocket;
 
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -10,8 +12,10 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import app.common.RestRequestSession;
+import chat.app.security.auth.provider.JwtAuthenticationProvider;
 @Component
 public class CustomHandshakeInterceptor implements HandshakeInterceptor  {
+    static final Logger logger = LogManager.getLogger(CustomHandshakeInterceptor.class);
 
 	@Autowired
 	private RestRequestSession session;

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import app.chat.dto.MessageDTO;
 import app.chat.dto.MessageType;
 
-@Service
+//@Service
 public class MessageProcessingService {
 
 	//@Autowired

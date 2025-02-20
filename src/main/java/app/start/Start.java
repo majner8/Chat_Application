@@ -16,11 +16,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableAutoConfiguration
 
 public class Start {
-    public static final Logger logger = LogManager.getLogger(Start.class);
+     static final Logger logger = LogManager.getLogger(Start.class);
 
     public static void main(String[] args) {
 		SpringApplication.run(Start.class, args);
-
 	}
 
 }

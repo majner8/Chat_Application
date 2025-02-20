@@ -16,11 +16,10 @@ import lombok.Setter;
 @Getter
 @RequestScope
 @Component
-@Setter
 public class RestRequestSession {
 
 	
-	public void setAuthData(Authentication auth) {
+	public void setAuthData(Authentication auth,String ipAdress) {
 		if(auth.getPrincipal()==null) {
 			throw new NullPointerException();
 		}
@@ -28,6 +27,7 @@ public class RestRequestSession {
 			CustomUserDetail x=(CustomUserDetail)auth.getPrincipal();
 			this.userID=Long.valueOf(x.getUsername());
 			this.userIDStr=x.getUsername();
+			this.ipAdress=ipAdress;
 		}
 		else {
 			throw new UnsupportedOperationException("Cannot set Auth data inside RestRequestSession, Unknown Principal type: "+auth.getPrincipal().getClass().getName());
@@ -36,6 +36,8 @@ public class RestRequestSession {
 	private long userID;
 	@Getter(value=AccessLevel.NONE)	
 	private String userIDStr;
+	
+	private String ipAdress;
 	public String getUserIdAsString() {
 		return this.userIDStr;
 	}

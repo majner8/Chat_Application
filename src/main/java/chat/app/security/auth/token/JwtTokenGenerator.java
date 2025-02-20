@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import app.common.IdGenerator;
+import app.start.Start;
 import chat.app.security.auth.authentication.CustomUserDetail;
 import chat.app.security.auth.authentication.JwtAuthentication;
 import chat.app.security.auth.authentication.UserNamePasswordAuthentication;
@@ -30,6 +32,8 @@ import chat.app.user.UserServiceAuthDTO;
 import jakarta.annotation.PostConstruct;
 @Service
 public class JwtTokenGenerator {
+
+    static final Logger logger = LogManager.getLogger(JwtTokenGenerator.class);
 
 	@Value("${security.token.userexpiration}")
 	private Duration userExpiration;
@@ -99,12 +103,25 @@ public class JwtTokenGenerator {
 				.build().verify(token);
 		boolean finishRegistration=jwt.getClaim(this.finishRegistrationHeader).asBoolean();
 		String userName=jwt.getClaim(this.userNameHeader).asString();
+		StringBuilder build=new StringBuilder();
+		if(logger.isTraceEnabled()) {
+			build.append(String.format("Verify jwt token username:"
+					+ " %s finishRegistration: Role: {", userName,finishRegistration));
+		}
 		Collection<? extends GrantedAuthority> role=jwt.getClaim(this.authRoleHeader).asList(String.class).stream().map((v)->{
-			
-			return new SimpleGrantedAuthority(v);
+			SimpleGrantedAuthority x= new SimpleGrantedAuthority(v);
+			if(logger.isTraceEnabled()) {
+				build.append(x.toString()+",");
+			}
+			return x;
 			
 		}).toList();
-		
+		if(logger.isTraceEnabled()) {
+			build.append("}");
+		}
+		if(logger.isTraceEnabled()) {
+			logger.trace(build.toString());
+		}
 		CustomUserDetail user=CustomUserDetail.builder()
 				.setUserName(userName)
 				.setPermission(role)
