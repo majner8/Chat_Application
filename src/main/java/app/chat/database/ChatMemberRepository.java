@@ -9,6 +9,11 @@ public interface ChatMemberRepository  extends JpaRepository<ChatMemberEntity,Us
 
 {
 
-	public List<Integer> getUserIDByPrimaryKey_ChatID(String chatID);
-	
+	public List<Integer> findUserIDByPrimaryKey_ChatID(String chatID);
+	public default List<String> findUserMemberId(String chatID){
+		
+		return this.findUserIDByPrimaryKey_ChatID(chatID).stream()
+				.map((v)->{return String.valueOf(v);}).toList();
+		 
+	}
 }
