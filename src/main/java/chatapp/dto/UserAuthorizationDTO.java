@@ -1,5 +1,6 @@
 package chatapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -16,5 +17,6 @@ import lombok.Setter;
 public abstract class UserAuthorizationDTO {
 	private String password;
 	private AuthorizationType type;
+	@JsonIgnore 
 	public abstract String getUserName();
 }

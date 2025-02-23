@@ -3,6 +3,7 @@ package chatapp.service;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -24,13 +25,14 @@ public class MessageService {
 	 @Autowired
 	 private ChatMessageMongoRepository chatRepo;
 	/**Method set order in message and save message to database */
-	public MessageDTO saveMessage(MessageDTO dto) {
+	 public MessageDTO saveMessage(MessageDTO dto) {
 		this.setNextChatOrder(dto);
 		ChatMessageDocuments message=this.messageDocumentMapper(dto);
-		this.chatRepo.save(message);
+		this.chatRepo.insert(message);
 		return dto;
 	}
 	
+
 	private void setNextChatOrder(MessageDTO message) {
 		Query query = new Query(Criteria.where("_id").is(message.getChatID()));
 		Update update = new Update()
@@ -43,21 +45,22 @@ public class MessageService {
 		message.setOrder(value.getMessageCount());
 	}
 	
-	 ChatMessageDocuments messageDocumentMapper(MessageDTO message) {
+
+	ChatMessageDocuments messageDocumentMapper(MessageDTO message) {
 		ChatMessageDocuments document= switch (message.getMessageType()) {
-	        case "TextMessage" -> {  
+	        case TEXTMESSAGE -> {  
 	        	TextMessageDTO dto=(TextMessageDTO)message;
 	        	var x= new ChatTextMessageDocuments()
 	        	.setTextMessage(dto.getText());
 	        	x.setType(MessageType.TEXTMESSAGE);
 	        	yield x;
 	        }
-		default -> throw new IllegalArgumentException("Unexpected value: " + message.getMessageType());
 	    };
 	    document.setAccepted(LocalDateTime.now());
 	    document.setChatId(message.getChatID());
 	    document.setOrder(message.getOrder());
 	    document.setSender(message.getSenderID());
+	    document.setMessageID(message.getMessageID());
 	    
 	    return document;
 	}

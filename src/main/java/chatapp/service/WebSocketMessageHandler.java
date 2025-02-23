@@ -5,7 +5,10 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import chatapp.config.RabbitMQConfig;
+import chatapp.dto.MessageDTO;
 
 import java.util.Map;
 
@@ -24,28 +27,29 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
 	
 	@Autowired
     private RabbitTemplate rabbitTemplate;
+	@Autowired
+	private   ObjectMapper mapper;
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-    	this.rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, "sendMessage",message.getPayload());
+    	MessageDTO mes=this.mapper.readValue(message.getPayload(),MessageDTO.class);
+    	this.rabbitTemplate
+    	.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, "sendMessage",mes);
     }
     
     @Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-    	if(logger.isDebugEnabled()) {
-    		logger.debug(String.format("Websocket connection established session id: %s userID: %s ", 
+    		logger.info(String.format("Websocket connection established session id: %s userID: %s ", 
     				session.getId(),session.getAttributes().get("username")
     				));
-    	}
+    	
     	this.sessionManager.afterConnectionEstablished(session);
     	
     }
     @Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-    	if(logger.isDebugEnabled()) {
-    		logger.debug(String.format("Websocket connection closed session id: %s userID: %s reason %s", 
-    				session.getId(),session.getAttributes().get("username"),status.toString()
-    				));
-    	}
+    	logger.info(String.format("Websocket connection closed session id: %s userID: %s reason %s", 
+				session.getId(),session.getAttributes().get("username"),status.toString()
+				));
     	this.sessionManager.afterConnectionClosed(session, status);
     }
 

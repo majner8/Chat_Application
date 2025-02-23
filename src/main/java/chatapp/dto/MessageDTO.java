@@ -12,12 +12,13 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "messageType")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = TextMessageDTO.class, name = "TextMessage")
+    @JsonSubTypes.Type(value = TextMessageDTO.class, name = "text"),
 })
 public abstract class MessageDTO implements WebsocketMessageInterface {
-	private String messageType;
+	
+	private MessageType messageType;
 	private String chatID;
 	private String senderID;
 	private LocalDateTime accepted;

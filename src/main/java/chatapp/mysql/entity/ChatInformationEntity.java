@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Version;
@@ -24,6 +25,6 @@ public class ChatInformationEntity {
 	@Version
 	private long version;
 	@Column
-    @OneToMany(mappedBy = "information", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "information", cascade = CascadeType.ALL,fetch=FetchType.EAGER)
 	private List<ChatMemberEntity> userMember;
 }

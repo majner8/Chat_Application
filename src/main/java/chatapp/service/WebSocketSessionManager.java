@@ -10,11 +10,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -55,14 +53,17 @@ public class WebSocketSessionManager {
 			if(logger.isDebugEnabled()) {
 	    		logger.debug("Websocket session is closed user id: "+userName);
 	    	}
+			
+			
 			return;
 		}
 		try {
 			String	objekt = this.mapper.writeValueAsString(message);
 			this.executor.execute(()->{
-				if(ses.isOpen()) {
+				if(!ses.isOpen()) {
 					if(logger.isDebugEnabled()) {
 			    		logger.debug("Websocket session is closed user id: "+userName);
+			    		return;
 			    	}
 				}
 				synchronized(ses) {
@@ -91,25 +92,22 @@ public class WebSocketSessionManager {
 				
 
 				
-				if(logger.isTraceEnabled()) {
-					logger.trace(String.format("Sending websocket message to user: %s message: { %s }",
-							
-							String.join(",", userName),message.toString()));
-				}
+				
 				String	objekt = this.mapper.writeValueAsString(message);
 				
 				userName.forEach((v)->{
 					WebSocketSession ses=	this.connectedSession.get(v);
 					if(ses==null||!ses.isOpen()) {
 						if(logger.isDebugEnabled()) {
-				    		logger.debug("Websocket session is closed user id: "+userName);
+				    		logger.debug("Websocket session is closed user id: "+v);
 				    	}
 						return;
 					}
 					this.executor.execute(()->{
-						if(ses.isOpen()) {
+						if(!ses.isOpen()) {
 							if(logger.isDebugEnabled()) {
-					    		logger.debug("Websocket session is closed user id: "+userName);
+					    		logger.debug("Websocket session is closed user id: "+v);
+					    		return;
 					    	}
 						}
 						synchronized(ses) {
@@ -117,7 +115,7 @@ public class WebSocketSessionManager {
 									ses.sendMessage(new TextMessage(objekt));
 								} catch (IOException e) {
 									logger.error(String.format("Error during sending websocket message session id: %s userID: %s ",
-											ses.getId(),userName,e
+											ses.getId(),v,e
 											));								}
 							
 						}

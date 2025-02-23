@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ChatDTO {
 
-	private Integer createdBy;
+	private Long createdBy;
 	private List<Long>memberID;
 	private boolean groupChat;
 	private String chatName;
