@@ -18,14 +18,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import chat.app.security.auth.dto.AuthorizationType;
-import chat.app.security.auth.dto.EmailUserAuthorizationDTO;
-import chat.app.security.auth.dto.TokenDTO;
-import chat.app.security.auth.dto.UserAuthorizationDTO;
-import chat.app.security.auth.dto.UserFinishRegistrationDTO;
-import chat.app.user.UserServiceAuthDTO;
+import chatapp.dto.AuthorizationType;
+import chatapp.dto.EmailUserAuthorizationDTO;
+import chatapp.dto.TokenDTO;
+import chatapp.dto.UserAuthorizationDTO;
+import chatapp.dto.UserFinishRegistrationDTO;
+import chatapp.dto.UserServiceAuthDTO;
 
-@SpringBootTest(classes=app.start.Start.class,webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes=chatapp.main.Start.class,webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class AuthorizationControllerTest {
 	  @Autowired

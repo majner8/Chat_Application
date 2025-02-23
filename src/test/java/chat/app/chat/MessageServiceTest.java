@@ -17,11 +17,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.test.context.ActiveProfiles;
 
-import app.chat.dto.MessageType;
-import app.chat.dto.TextMessageDTO;
-import chat.app.chat.mongodb.documents.ChatMessageCollectionsDocument;
+import chatapp.dto.MessageType;
+import chatapp.dto.TextMessageDTO;
+import chatapp.mongo.documents.ChatMessageCollectionsDocument;
+import chatapp.service.MessageService;
 
-@SpringBootTest(classes=app.start.Start.class,webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes=chatapp.main.Start.class,webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("TEST")
 public class MessageServiceTest {
 
@@ -54,7 +55,6 @@ public class MessageServiceTest {
 		this.service.saveMessage(new TextMessageDTO()
 				.setText("ahoj")
 				.setChatID("asd")
-				.setMessageType(MessageType.TEXTMESSAGE)
 				.setSenderID("0")
 				);
 	}

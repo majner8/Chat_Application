@@ -21,14 +21,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import app.chat.ChatDTO;
 import chat.app.configTest.TestDataSeeder;
-import chat.app.security.auth.dto.AuthorizationType;
-import chat.app.security.auth.dto.EmailUserAuthorizationDTO;
-import chat.app.security.auth.dto.TokenDTO;
-import chat.app.security.auth.dto.UserFinishRegistrationDTO;
+import chatapp.dto.AuthorizationType;
+import chatapp.dto.ChatDTO;
+import chatapp.dto.EmailUserAuthorizationDTO;
+import chatapp.dto.TokenDTO;
+import chatapp.dto.UserFinishRegistrationDTO;
 
-@SpringBootTest(classes=app.start.Start.class,webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes=chatapp.main.Start.class,webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("TEST")
 public class ChatRestController {
 	@Autowired

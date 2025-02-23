@@ -19,10 +19,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import chat.app.security.auth.dto.AuthorizationType;
-import chat.app.security.auth.dto.EmailUserAuthorizationDTO;
-import chat.app.security.auth.dto.TokenDTO;
-import chat.app.security.auth.dto.UserFinishRegistrationDTO;
+import chatapp.dto.AuthorizationType;
+import chatapp.dto.EmailUserAuthorizationDTO;
+import chatapp.dto.TokenDTO;
+import chatapp.dto.UserFinishRegistrationDTO;
 
 @Component
 @Profile("TEST")
