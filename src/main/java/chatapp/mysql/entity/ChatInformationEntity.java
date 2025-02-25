@@ -1,5 +1,6 @@
 package chatapp.mysql.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -7,6 +8,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Version;
 import lombok.Getter;
@@ -27,4 +30,9 @@ public class ChatInformationEntity {
 	@Column
     @OneToMany(mappedBy = "information", cascade = CascadeType.ALL,fetch=FetchType.EAGER)
 	private List<ChatMemberEntity> userMember;
+	private LocalDateTime createdAt=LocalDateTime.now();
+	 @ManyToOne(fetch = FetchType.LAZY) 
+	  @JoinColumn(name = "created_by", referencedColumnName = "id") 
+	private UserEntity createdBy;
+
 }
