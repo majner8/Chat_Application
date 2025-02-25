@@ -13,6 +13,6 @@ import lombok.Data;
 public class ChatMessageCollectionsDocument {
 	@Id
 	private String chatId;
-	private int messageCount;
 	private LocalDateTime lastMessage;
+	private int messageCount;
 }

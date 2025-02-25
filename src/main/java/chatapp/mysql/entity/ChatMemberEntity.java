@@ -1,7 +1,5 @@
 package chatapp.mysql.entity;
 
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -19,21 +17,21 @@ import lombok.experimental.Accessors;
 @Entity
 public class ChatMemberEntity {
 
+    @Column
+	private String chatNickName;
+    @ManyToOne
+    @MapsId("chatID")
+    @JoinColumn(name = "chatid", referencedColumnName = "chatid")
+	private ChatInformationEntity information;
     @EmbeddedId
 	private UserIDChatIDCompositeKey primaryKey=new UserIDChatIDCompositeKey();
     @ManyToOne
-    @MapsId("chatID")  
-    @JoinColumn(name = "chatid", referencedColumnName = "chatid")
-	private ChatInformationEntity information;
-    @ManyToOne
     @MapsId("userID")
-    @JoinColumn(name = "userid", referencedColumnName = "id")  
+    @JoinColumn(name = "userid", referencedColumnName = "id")
     private UserEntity user;
-    @Column
-	private String chatNickName;
     @Column
     @Version
     private long version;
-	
-	
+
+
 }

@@ -20,19 +20,19 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Entity
 public class ChatInformationEntity {
+	private LocalDateTime createdAt=LocalDateTime.now();
+	@ManyToOne(fetch = FetchType.LAZY)
+	  @JoinColumn(name = "created_by", referencedColumnName = "id")
+	private UserEntity createdBy;
 	@Column()
 	@Id
 	private String chatID;
 	@Column
 	private String chatName;
-	@Version
-	private long version;
 	@Column
     @OneToMany(mappedBy = "information", cascade = CascadeType.ALL,fetch=FetchType.EAGER)
 	private List<ChatMemberEntity> userMember;
-	private LocalDateTime createdAt=LocalDateTime.now();
-	 @ManyToOne(fetch = FetchType.LAZY) 
-	  @JoinColumn(name = "created_by", referencedColumnName = "id") 
-	private UserEntity createdBy;
+	 @Version
+	private long version;
 
 }

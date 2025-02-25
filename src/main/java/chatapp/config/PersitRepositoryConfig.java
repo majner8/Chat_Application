@@ -12,6 +12,6 @@ public class PersitRepositoryConfig {
 
 	@Bean
 	public PersistRepository<ChatInformationEntity,String> createBean(){
-		return new PersistRepositoryImpl<ChatInformationEntity,String>();
+		return new PersistRepositoryImpl<>();
 	}
 }

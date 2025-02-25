@@ -6,8 +6,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
-
-import chatapp.main.Start;
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
     static final Logger logger = LogManager.getLogger(JwtAuthenticationProvider.class);

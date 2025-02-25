@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 public class UserServiceAuthDTO {
 
+	private final boolean finishRegistration;
 	private final String id;
 	private final List<? extends GrantedAuthority> role;
-	private final boolean finishRegistration;
 }

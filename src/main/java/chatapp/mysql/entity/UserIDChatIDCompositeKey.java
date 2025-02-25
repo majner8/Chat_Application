@@ -17,19 +17,23 @@ import lombok.Setter;
 @Setter
 public class UserIDChatIDCompositeKey implements Serializable  {
 
-	@Column
-	private String chatID;
-	@Column
-	private long userID;
-	
 	public static UserIDChatIDCompositeKey of(String chatID,long userID) {
 		return new UserIDChatIDCompositeKey(chatID,userID);
 	}
-	
+	@Column
+	private String chatID;
+
+	@Column
+	private long userID;
+
 	@Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+			return true;
+		}
+        if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
         UserIDChatIDCompositeKey that = (UserIDChatIDCompositeKey) o;
         return userID == that.userID && Objects.equals(chatID, that.chatID);
     }

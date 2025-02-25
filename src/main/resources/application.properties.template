@@ -1,0 +1,3 @@
+spring.config.import=classpath:application-datasource.properties,application-security.properties
+logging.level.root=DEBUG 
+

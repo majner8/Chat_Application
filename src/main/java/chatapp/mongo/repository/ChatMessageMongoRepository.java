@@ -7,5 +7,5 @@ import chatapp.mongo.documents.ChatMessageDocuments;
 @Repository
 public interface ChatMessageMongoRepository extends MongoRepository<ChatMessageDocuments, String> {
 
-	
+
 }

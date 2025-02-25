@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
-import chatapp.security.JwtAuthenticationProvider;
 import chatapp.util.RestRequestSession;
 @Component
 public class CustomHandshakeInterceptor implements HandshakeInterceptor  {
@@ -19,18 +18,18 @@ public class CustomHandshakeInterceptor implements HandshakeInterceptor  {
 
 	@Autowired
 	private RestRequestSession session;
-	
+
+	@Override
+	public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
+			Exception exception) {
+
+	}
+
 	@Override
 	public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
 			Map<String, Object> attributes) throws Exception {
 		attributes.put("username", this.session.getUserIdAsString());
 		return true;
-	}
-
-	@Override
-	public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
-			Exception exception) {
-		
 	}
 
 }

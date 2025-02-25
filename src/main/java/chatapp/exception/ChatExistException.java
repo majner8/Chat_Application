@@ -1,7 +1,6 @@
 package chatapp.exception;
 
 import chatapp.dto.ChatDTO;
-import chatapp.exception.EntityExistException.EntityExistExceptionType;
 import lombok.Getter;
 
 @Getter
@@ -11,5 +10,5 @@ public class ChatExistException extends RuntimeException {
 		super (e);
 		this.dto=dto;
 	}
-	
+
 }

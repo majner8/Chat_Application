@@ -14,11 +14,11 @@ import lombok.NonNull;
 @Builder(setterPrefix="set")
 public class CustomUserDetail implements UserDetails {
 
-	@NonNull private final Collection<? extends GrantedAuthority> permission;
-	@NonNull private final String userName;
 	@Getter
 	private final boolean completeRegistration;
-	
+	@NonNull private final Collection<? extends GrantedAuthority> permission;
+	@NonNull private final String userName;
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return this.permission;

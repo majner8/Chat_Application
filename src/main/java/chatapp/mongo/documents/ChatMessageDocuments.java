@@ -8,21 +8,19 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import chatapp.dto.MessageType;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Document(collection = "messages")
-@CompoundIndex(def = "{'chatId': 1, 'order': 1}", unique = true)  // Unikátní kombinace
+@CompoundIndex(def = "{'chatId': 1, 'order': 1}", unique = true)
 public abstract class ChatMessageDocuments {
+    private LocalDateTime accepted;
     @Indexed
 	private String chatId;
-    @Indexed
-	private long order;
 	@Id
 	private String messageID;
+	@Indexed
+	private long order;
 	private String sender;
-	private LocalDateTime accepted;
 	private MessageType type;
 }

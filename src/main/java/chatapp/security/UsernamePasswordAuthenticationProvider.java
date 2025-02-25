@@ -15,22 +15,21 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import chatapp.main.Start;
 import chatapp.mysql.repository.UserRepository;
 import chatapp.mysql.repository.UserRepository.AuthProjection;
 @Component
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
-	private UserRepository repo;
-	@Autowired
 	private PasswordEncoder hashService;
+	@Autowired
+	private UserRepository repo;
 	@Override
-	public Authentication authenticate(Authentication authentication) throws AuthenticationException {   
+	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		UserNamePasswordAuthentication aut=(UserNamePasswordAuthentication)authentication;
 		Optional<AuthProjection> entPr=Optional.empty();
 		switch(aut.getAuthorizationType()) {
-			case EMAIL: 
+			case EMAIL:
 				entPr=this.repo.findByEmail(aut.getName());
 				break;
 			case PHONE:
@@ -54,7 +53,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 				.setCompleteRegistration(pr.getFinishRegistration()?true:false)
 				.build();
 			return new UserNamePasswordAuthentication(user);
-			
+
 	}
 
 	@Override

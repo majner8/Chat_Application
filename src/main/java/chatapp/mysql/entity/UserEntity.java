@@ -18,19 +18,19 @@ public class UserEntity {
 	@Column
 	private String email;
 	@Column
-	private String phoneNumber;
-	@Column
-	private String password;
-	@Column
 	private boolean finishRegistration;
 	@Column
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	@Column
-	private String name;
 	@Column
 	private String lastName;
 	@Column
+	private String name;
+	@Column
 	private String nickName;
+	@Column
+	private String password;
+	@Column
+	private String phoneNumber;
 }

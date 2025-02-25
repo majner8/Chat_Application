@@ -13,16 +13,16 @@ import chatapp.websocket.CustomHandshakeInterceptor;
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 	@Autowired
-    private  WebSocketMessageHandler webSocketHandler;
-	@Autowired
     private  CustomHandshakeInterceptor handshakeInterceptor;
+	@Autowired
+    private  WebSocketMessageHandler webSocketHandler;
 
-    
+
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler, "/ws") // WebSocket endpoint
-                .addInterceptors(handshakeInterceptor) // Přidáme handshake interceptor
-                .setAllowedOrigins("*"); // Povolit všechny originy (pro testování)
+        registry.addHandler(webSocketHandler, "/ws")
+                .addInterceptors(handshakeInterceptor)
+                .setAllowedOrigins("*");
     }
 }

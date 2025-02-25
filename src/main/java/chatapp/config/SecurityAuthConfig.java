@@ -13,7 +13,7 @@ import org.springframework.security.authentication.ProviderManager;
 public class SecurityAuthConfig {
 	@Autowired
 	private List<AuthenticationProvider> authenticationProviders;
-	
+
 	 @Bean
 		public AuthenticationManager createManager() {
 			return new ProviderManager(this.authenticationProviders);

@@ -11,6 +11,6 @@ public class PersistRepositoryBeanConfig {
 
 	@Bean
 	public PersistRepositoryImpl<UserEntity,Long> createUserBean(){
-		return new PersistRepositoryImpl<UserEntity,Long>();
+		return new PersistRepositoryImpl<>();
 	}
 }

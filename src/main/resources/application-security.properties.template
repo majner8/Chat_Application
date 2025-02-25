@@ -1,0 +1,5 @@
+security.token.preflix=Bearer
+security.token.headername=Authorization
+security.token.userexpiration=5h
+security.token.deviceExpiration=5h
+security.token.key=

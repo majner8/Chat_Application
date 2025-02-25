@@ -1,0 +1,6 @@
+/target/
+*.classpath
+*.project
+*.properties
+*.prefs
+!*.application.properties.template

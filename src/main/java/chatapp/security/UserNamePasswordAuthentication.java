@@ -7,46 +7,28 @@ import org.springframework.security.core.GrantedAuthority;
 
 import chatapp.dto.AuthorizationType;
 import chatapp.dto.UserAuthorizationDTO;
-import lombok.Builder;
 
 public class UserNamePasswordAuthentication implements Authentication {
 
 
 
+	private final UserAuthorizationDTO authenticationDTO;private final boolean isAuthenticated;
+
+	private final CustomUserDetail userDetail;
 	public UserNamePasswordAuthentication(CustomUserDetail userDetail) {
 		this.userDetail = userDetail;
 		this.authenticationDTO = null;
 		this.isAuthenticated=true;
-	
-	}public UserNamePasswordAuthentication(UserAuthorizationDTO authenticationDTO
+
+	}
+	public UserNamePasswordAuthentication(UserAuthorizationDTO authenticationDTO
 			) {
 		this.userDetail=null;
 		this.authenticationDTO=authenticationDTO;
 		this.isAuthenticated=false;
 
-			
-		
-	}
 
-	private final CustomUserDetail userDetail;
-	private final boolean isAuthenticated;
-	private final UserAuthorizationDTO authenticationDTO;
 
-	public AuthorizationType getAuthorizationType() {
-		if(this.authenticationDTO==null) return null;
-		return this.authenticationDTO.getType();
-	}
-	
-	public boolean isFinishRegistration() {
-		if(!this.isAuthenticated) return false;
-		return this.userDetail.isCompleteRegistration();
-	}
-	@Override
-	public String getName() {
-		if(!isAuthenticated) {
-			return this.authenticationDTO.getUserName();
-		}
-		return this.userDetail.getUsername();
 	}
 
 	@Override
@@ -57,6 +39,12 @@ public class UserNamePasswordAuthentication implements Authentication {
 		return null;
 	}
 
+	public AuthorizationType getAuthorizationType() {
+		if(this.authenticationDTO==null) {
+			return null;
+		}
+		return this.authenticationDTO.getType();
+	}
 	@Override
 	public Object getCredentials() {
 
@@ -73,6 +61,14 @@ public class UserNamePasswordAuthentication implements Authentication {
 	}
 
 	@Override
+	public String getName() {
+		if(!isAuthenticated) {
+			return this.authenticationDTO.getUserName();
+		}
+		return this.userDetail.getUsername();
+	}
+
+	@Override
 	public Object getPrincipal() {
 		return this.userDetail;
 	}
@@ -80,6 +76,13 @@ public class UserNamePasswordAuthentication implements Authentication {
 	@Override
 	public boolean isAuthenticated() {
 		return this.isAuthenticated;
+	}
+
+	public boolean isFinishRegistration() {
+		if(!this.isAuthenticated) {
+			return false;
+		}
+		return this.userDetail.isCompleteRegistration();
 	}
 
 	@Override

@@ -16,11 +16,11 @@ import chatapp.mysql.repository.ChatMemberRepository;
 @Service
 public class MessageConsumer {
     static final Logger logger = LogManager.getLogger(MessageConsumer.class);
-    
+
     @Autowired
-    private MessageService mesServis;
-	@Autowired
 	private ChatMemberRepository memberRepo;
+	@Autowired
+    private MessageService mesServis;
 	@Autowired
 	private WebSocketSessionManager websocketSession;
 	@RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
@@ -31,19 +31,12 @@ public class MessageConsumer {
 		this.websocketSession.sendMessageToUser(message, member);
 		}
 		catch(DuplicateKeyException e) {
-			logger.error("DuplicateKeyException occurs during processing message, sender: "+message.getSenderID(),e);
+			logger.error("DuplicateKeyException occurs during processing message, sender: "+message.getSenderID());
 
 		}
 		catch(Exception e) {
 			logger.error("Error during processing message, sender: "+message.getSenderID(),e);
 		}
 	}
-	
-	private void sendError(Exception e, MessageDTO message) {
-		
-	}
-	private void sendDuplicateKeyError(DuplicateKeyException e,MessageDTO message) {
-		
-	}
-	
+
 }

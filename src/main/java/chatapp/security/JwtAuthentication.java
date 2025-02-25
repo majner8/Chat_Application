@@ -14,22 +14,16 @@ import lombok.NonNull;
 @Getter(AccessLevel.PRIVATE)
 @Builder(setterPrefix="set")
 public class JwtAuthentication implements Authentication {
-	@NonNull private final CustomUserDetail user;
-	@NonNull private final String jwtToken;
-	private final boolean isAuthentication;
 	private final boolean finishRegistration;
-	
+	private final boolean isAuthentication;
+	@NonNull private final String jwtToken;
+	@NonNull private final CustomUserDetail user;
+
 	public JwtAuthentication(JwtAuthentication jwtAuthentication ,boolean isAuthentication) {
 		this.user = jwtAuthentication.getUser();
 		this.jwtToken =jwtAuthentication.getJwtToken();
 		this.isAuthentication = isAuthentication;
 		this.finishRegistration=jwtAuthentication.isFinishRegistration();
-	}
-	
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return this.user.getUsername();
 	}
 
 	@Override
@@ -51,12 +45,18 @@ public class JwtAuthentication implements Authentication {
 	}
 
 	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return this.user.getUsername();
+	}
+
+	@Override
 	public Object getPrincipal() {
 		// TODO Auto-generated method stub
 		return this.user;
 	}
 
-	
+
 	@Override
 	public boolean isAuthenticated() {
 		return this.isAuthentication;

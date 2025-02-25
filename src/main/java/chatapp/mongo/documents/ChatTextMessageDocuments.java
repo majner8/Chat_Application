@@ -1,7 +1,5 @@
 package chatapp.mongo.documents;
 
-import java.time.LocalDateTime;
-
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -22,5 +20,5 @@ public class ChatTextMessageDocuments  extends ChatMessageDocuments{
 	public ChatTextMessageDocuments() {
 		super.setType(MessageType.TEXTMESSAGE);
 	}
-	
+
 }
